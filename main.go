@@ -1,9 +1,9 @@
 package main
 
 import ( 
-    "fmt"
+    "github.com/quicky-dev/generator/generator"
 )
 
 func main() {
-    fmt.Println("Hello, world!")
+    generator.GenerateGeneric()
 }
