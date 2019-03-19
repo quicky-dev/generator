@@ -21,6 +21,12 @@ func Init(filePath string) bool {
    return true
 }
 
+func commander(script *[]string) func(string) {
+    return func (command string) {
+        *script = append(*script, command) 
+    }
+}
+
 // GenerateGeneric will generate a generic developers setup for the user to
 // to run locally
 func GenerateGeneric() {
@@ -28,7 +34,7 @@ func GenerateGeneric() {
 
     // Add shebang to the top of the file
     genericScript = append(genericScript, "#! /bin/bash")
-    genericScript = macos.InstallXCode(genericScript)
+    macos.InstallXCode(commander(&genericScript))
 
     f, err := os.Create("test")
 
