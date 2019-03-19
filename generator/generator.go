@@ -8,20 +8,13 @@ import (
 )
 
 
-// Generic is the generic data structure for generating 
-type Generic struct {
-    Editor string
-    Python bool
-    Node bool
-    NVM bool
-    PATH string
-}
-
 // Init will initialize the modules filepath for where to save the generated files
 func Init(filePath string) bool {
    return true
 }
 
+// Helper function for inserting commands into the overall script slice.
+// Very useful for not having to call append manually every time
 func commander(script *[]string) func(string, int) {
     return func (command string, indent int) {
         indents := strings.Repeat("\t", indent)
@@ -34,10 +27,14 @@ func commander(script *[]string) func(string, int) {
 func GenerateGeneric() {
     genericScript := []string{}
 
-    // Add shebang to the top of the file
+    // Add shebang to the top of the file to ensure that bash
+    // executes the file
     genericScript = append(genericScript, "#! /bin/bash\n")
+
+    // Setup script
     macos.InstallXCode(commander(&genericScript))
     macos.InstallBrew(commander(&genericScript))
+
     f, err := os.Create("test")
 
     if err != nil {
