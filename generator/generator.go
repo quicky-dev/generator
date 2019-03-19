@@ -2,16 +2,16 @@ package generator
 
 import (
     "os"
+    "path"
     "strings"
+    "errors"
 
     "github.com/quicky-dev/generator/macos"
+    "github.com/google/uuid"
 )
 
-
-// Init will initialize the modules filepath for where to save the generated files
-func Init(filePath string) bool {
-   return true
-}
+var filePath string;
+var debug bool;
 
 // Helper function for inserting commands into the overall script slice.
 // Very useful for not having to call append manually every time
@@ -22,9 +22,20 @@ func commander(script *[]string) func(string, int) {
     }
 }
 
+
+// Init will initialize the modules filepath for where to save the generated files
+func Init(path string, debugMode bool) bool {
+   filePath = path
+   debug = debugMode
+   return true
+}
+
 // GenerateGeneric will generate a generic developers setup for the user to
 // to run locally
-func GenerateGeneric() {
+func GenerateGeneric() (string, error) {
+    if filePath == "" {
+        return "", errors.New("The current file path isnt set")
+    }
     genericScript := []string{}
 
     // Add shebang to the top of the file to ensure that bash
@@ -35,10 +46,13 @@ func GenerateGeneric() {
     macos.InstallXCode(commander(&genericScript))
     macos.InstallBrew(commander(&genericScript))
 
-    f, err := os.Create("test")
+     
+    fileName := uuid.New().String()
+    file := path.Join(filePath, fileName)
+    f, err := os.Create(file)
 
     if err != nil {
-        panic("error")
+        return "", err
     }
 
     for _, command := range genericScript {
@@ -46,10 +60,11 @@ func GenerateGeneric() {
 
         if err != nil {
             f.Close()
-            panic("error")
+            return "", err
         }
     }
     f.Close()
+    return file, nil
 }
 
 
