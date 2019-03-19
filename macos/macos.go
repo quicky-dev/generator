@@ -8,9 +8,11 @@ func InstallXCode(commander func(string, int)) {
 
     // Check if the user has xcode installed and attempt to install the xcode CLI tools
     // if they're not already installed
+    commander("# Install XCode / XCode CLI tools", 0)
     commander("if command -v xcode-select &> /dev/null; then", 0)
     commander("echo \"Xcode installed, installing commandline tools if not already installed\"", 1)
     commander("xcode-select --install 2> /dev/null", 1)
+    commander("echo \"Successfully installed xcode-cli tools\"", 1)
 
     // Handle if its 
     commander("else", 0)
@@ -25,9 +27,11 @@ func InstallXCode(commander func(string, int)) {
     commander("exit", 1)
     commander("fi", 1)
     commander("fi", 0)
+    commander("", 0)
 }
 
-func InstallBrew(genericScript []string) []string {
-   return genericScript 
+func InstallBrew(commander func(string, int)) {
+    commander("# Installing brew pkg manager", 0)
+    commander("/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"", 0)
 }
 

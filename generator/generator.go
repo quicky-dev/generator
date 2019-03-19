@@ -35,9 +35,9 @@ func GenerateGeneric() {
     genericScript := []string{}
 
     // Add shebang to the top of the file
-    genericScript = append(genericScript, "#! /bin/bash")
+    genericScript = append(genericScript, "#! /bin/bash\n")
     macos.InstallXCode(commander(&genericScript))
-
+    macos.InstallBrew(commander(&genericScript))
     f, err := os.Create("test")
 
     if err != nil {
