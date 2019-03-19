@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
+    generator.Init("output", true)
     generator.GenerateGeneric()
 }
