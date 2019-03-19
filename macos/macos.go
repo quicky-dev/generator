@@ -31,8 +31,9 @@ func InstallXCode(addCmd func(string, int)) {
 }
 
 // Install brew grabs brew from github and installs it on the current machine
-func InstallBrew(commander func(string, int)) {
-    commander("# Installing brew pkg manager", 0)
-    commander("/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"", 0)
+func InstallBrew(addCmd func(string, int)) {
+    addCmd("# Installing brew pkg manager", 0)
+    addCmd("/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"", 0)
 }
+
 

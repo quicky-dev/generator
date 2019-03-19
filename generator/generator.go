@@ -46,19 +46,23 @@ func GenerateGeneric() (string, error) {
     macos.InstallXCode(commander(&genericScript))
     macos.InstallBrew(commander(&genericScript))
 
-     
-    fileName := uuid.New().String()
-    file := path.Join(filePath, fileName)
-    f, err := os.Create(file)
-
-    if err != nil {
+    // Generate a new uuid4
+    uuid, err := uuid.NewRandom(); if err != nil {
         return "", err
     }
 
-    for _, command := range genericScript {
-        _, err := f.WriteString(command + "\n")
+    // Convert the uuid4 to a string
+    fileName := uuid.String()
+    file := path.Join(filePath, fileName)
 
-        if err != nil {
+    // Attempt to create a file
+    f, err := os.Create(file); if err != nil {
+        return "", err
+    }
+
+    // Iterate over the script and start writing it to a file 
+    for _, command := range genericScript {
+        _, err := f.WriteString(command + "\n"); if err != nil {
             f.Close()
             return "", err
         }
