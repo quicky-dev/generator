@@ -2,6 +2,7 @@ package generator
 
 import (
     "os"
+    "strings"
 
     "github.com/quicky-dev/generator/macos"
 )
@@ -21,9 +22,10 @@ func Init(filePath string) bool {
    return true
 }
 
-func commander(script *[]string) func(string) {
-    return func (command string) {
-        *script = append(*script, command) 
+func commander(script *[]string) func(string, int) {
+    return func (command string, indent int) {
+        indents := strings.Repeat("\t", indent)
+        *script = append(*script, indents + command) 
     }
 }
 
