@@ -13,6 +13,19 @@ import (
 var filePath string;
 var debug bool;
 
+// InstallRequest is used for unmarshalling json objects directly into a request object
+// that the script factory can then digest and work with
+type InstallRequest struct{
+    Languages []string `json:"languages"`
+    Terminals []string `json:"terminals"`
+    Shells    []string `json:"shells"`
+    Browsers  []string `json:"browsers"`
+    Editors   []string `json:"editors"`
+    Tools     []string `json:"tools"`
+    Databases []string `json:"databases"`
+}
+
+
 // Helper function for inserting commands into the overall script slice.
 // Very useful for not having to call append manually every time
 func commander(script *[]string) func(string, int) {
