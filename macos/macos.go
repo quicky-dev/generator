@@ -30,10 +30,38 @@ func InstallXCode(addCmd func(string, int)) {
     addCmd("", 0)
 }
 
-// Install brew grabs brew from github and installs it on the current machine
+// InstallBrew grabs brew from github and installs it on the current machine
 func InstallBrew(addCmd func(string, int)) {
     addCmd("# Installing brew pkg manager", 0)
     addCmd("/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"", 0)
+    addCmd("brew tap caskroom/cask", 0)
+    addCmd("", 0)
 }
 
+// supportedLangs is a list of supported languages and versions,
+// Redundant for now but will be more useful in the future when language versioning comes into
+// play
+var supportedLangs = map[string]string {
+    "python":"python",
+    "ruby": "ruby",
+    "node": "node",
+}
+
+// installLang adds the language to be installed to the command
+func installLang(addCmd func(string, int), lang string) {
+    addCmd("brew install" + lang, 0)
+}
+
+// InstallLangs installs all languages that are supported by the script factory
+func InstallLangs(addCmd func(string, int), langs []string) {
+
+   addCmd("# Install all languages requested", 0)
+   addCmd("", 0)
+   for _, lang := range langs {
+       if val, ok := supportedLangs[lang]; ok {
+           installLang(addCmd, val)
+       }
+   }
+   addCmd("", 0) 
+}
 
