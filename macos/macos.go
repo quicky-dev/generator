@@ -1,5 +1,23 @@
 package macos
 
+// List of supported browsers that can be added to our script
+var supportedBrowsers = map[string]string {
+    "google-chrome": "google-chrome",
+    "firefox": "firefox",
+    "opera": "opera",
+}
+
+// supportedLangs is a list of supported languages and versions,
+// Redundant for now but will be more useful in the future when language versioning comes into
+// play
+var supportedLangs = map[string]string {
+    "python":"python",
+    "ruby": "ruby",
+    "node": "node",
+    "go": "go",
+    "rust": "rust",
+}
+
 // InstallXCode checks if xcode has been installed, which is needed for 
 // the user to install any other dependency
 func InstallXCode(addCmd func(string, int)) {
@@ -38,30 +56,48 @@ func InstallBrew(addCmd func(string, int)) {
     addCmd("", 0)
 }
 
-// supportedLangs is a list of supported languages and versions,
-// Redundant for now but will be more useful in the future when language versioning comes into
-// play
-var supportedLangs = map[string]string {
-    "python":"python",
-    "ruby": "ruby",
-    "node": "node",
-}
-
-// installLang adds the language to be installed to the command
-func installLang(addCmd func(string, int), lang string) {
-    addCmd("brew install" + lang, 0)
-}
-
 // InstallLangs installs all languages that are supported by the script factory
 func InstallLangs(addCmd func(string, int), langs []string) {
 
    addCmd("# Install all languages requested", 0)
-   addCmd("", 0)
+   addCmd("echo \"Installing selected languages on to the system\"", 0)
+
+   // Iterate over all the selected languages
    for _, lang := range langs {
-       if val, ok := supportedLangs[lang]; ok {
-           installLang(addCmd, val)
+       if lang, ok := supportedLangs[lang]; ok {
+            addCmd("brew install " + lang, 0)
        }
    }
    addCmd("", 0) 
+}
+
+// InstallTerminals will add all requested terminal emulator setup items to the script
+func InstallTerminals(addCmd func(string, int)) {
+
+}
+
+// InstallShells will add all requested shells setup items to the script
+func InstallShells(addCmd func(string, int)) {
+    
+}
+
+// InstallBrowsers will add all requested browser setup items to the script
+func InstallBrowsers(addCmd func(string, int)) {
+
+}
+
+// InstallEditors will add all requested editor setup items to the script
+func InstallEditors(addCmd func(string, int)) {
+
+}
+
+// InstallTools will add all requested tool setup items to the script
+func InstallTools(addCmd func(string, int)) {
+
+}
+
+// InstallDatabases will add all requested database items to the script
+func InstallDatabases(addCmd func(string, int)) {
+
 }
 
