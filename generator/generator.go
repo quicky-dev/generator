@@ -22,7 +22,6 @@ func commander(script *[]string) func(string, int) {
     }
 }
 
-
 // Init will initialize the modules filepath for where to save the generated files
 func Init(path string, debugMode bool) bool {
    filePath = path
@@ -45,6 +44,7 @@ func GenerateGeneric() (string, error) {
     // Setup script
     macos.InstallXCode(commander(&genericScript))
     macos.InstallBrew(commander(&genericScript))
+    macos.InstallLangs(commander(&genericScript), []string{"python", "ruby", "yolo"})
 
     // Generate a new uuid4
     uuid, err := uuid.NewRandom(); if err != nil {
