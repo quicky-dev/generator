@@ -1,21 +1,41 @@
 package macos
 
-// List of supported browsers that can be added to our script
-var supportedBrowsers = map[string]string {
-    "google-chrome": "google-chrome",
-    "firefox": "firefox",
-    "opera": "opera",
-}
-
-// supportedLangs is a list of supported languages and versions,
-// Redundant for now but will be more useful in the future when language versioning comes into
-// play
+// Supported languages
 var supportedLangs = map[string]string {
     "python":"python",
     "ruby": "ruby",
     "node": "node",
     "go": "go",
     "rust": "rust",
+}
+
+// Supported terminals
+var supportedTerminals = map[string]string {
+
+}
+
+// Supported shells
+var supportedShells = map[string]string {
+
+}
+
+// Supported browsers
+var supportedBrowsers = map[string]string {
+    "google-chrome": "google-chrome",
+    "firefox": "firefox",
+    "opera": "opera",
+}
+
+var supportedEditors = map[string]string {
+
+}
+
+var supportedTools = map[string]string {
+
+}
+
+var supportedDatabases = map[string]string {
+
 }
 
 // InstallXCode checks if xcode has been installed, which is needed for 
