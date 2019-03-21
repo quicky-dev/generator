@@ -54,6 +54,7 @@ func GenerateGeneric() (string, error) {
         Languages: []string{"python", "ruby", "yolo"},
         Terminals: []string{"hyper", "fake-terminal", "iterm2", "yeet"},
         Shells: []string{"zsh", "fish", "fsdfd"},
+        Browsers: []string{"google chrome", "opera",},
     }
 
 
@@ -69,6 +70,7 @@ func GenerateGeneric() (string, error) {
     macos.InstallLangs(commander(&script), install.Languages)
     macos.InstallTerminals(commander(&script), install.Terminals)
     macos.InstallShells(commander(&script), install.Shells)
+    macos.InstallBrowsers(commander(&script), install.Browsers)
 
     // Generate a new uuid4
     uuid, err := uuid.NewRandom(); if err != nil {
