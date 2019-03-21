@@ -25,7 +25,7 @@ var supportedShells = map[string]string {
 
 // Supported browsers
 var supportedBrowsers = map[string]string {
-    "google-chrome": "google-chrome",
+    "google chrome": "google-chrome",
     "firefox": "firefox",
     "opera": "opera",
 }
@@ -133,8 +133,8 @@ func InstallShells(addCmd func(string, int), shells []string) {
         return
     }
 
-        addCmd("# Install all shells requested", 0)
-        addCmd("echo \"Installing selected shells on to the system\"", 0)
+    addCmd("# Install all shells requested", 0)
+    addCmd("echo \"Installing selected shells on to the system\"", 0)
 
     for _, shell := range shells {
         if shellPkg, ok := supportedShells[shell]; ok {
@@ -153,8 +153,19 @@ func InstallShells(addCmd func(string, int), shells []string) {
 }
 
 // InstallBrowsers will add all requested browser setup items to the script
-func InstallBrowsers(addCmd func(string, int)) {
+func InstallBrowsers(addCmd func(string, int), browsers []string) {
+    if len(browsers) == 0 {
+        return
+    }
 
+    addCmd("# Install all browsers requested", 0)
+    addCmd("echo \"Installing selected browsers on to the system\"", 0)
+
+    for _, browser := range browsers {
+        if browserPkg, ok := supportedBrowsers[browser]; ok {
+            addCmd("brew cask install " + browserPkg, 0)
+        }
+    }
 }
 
 // InstallEditors will add all requested editor setup items to the script
