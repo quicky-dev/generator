@@ -45,19 +45,30 @@ func Init(path string, debugMode bool) bool {
 // GenerateGeneric will generate a generic developers setup for the user to
 // to run locally
 func GenerateGeneric() (string, error) {
+
     if filePath == "" {
         return "", errors.New("The current file path isnt set")
     }
-    genericScript := []string{}
+
+    install := InstallRequest{
+        Languages: []string{"python", "ruby", "yolo"},
+        Terminals: []string{"hyper", "fake-terminal", "iterm2", "yeet"},
+        Shells: []string{"zsh", "fish", "fsdfd"},
+    }
+
+
+    script := []string{}
 
     // Add shebang to the top of the file to ensure that bash
     // executes the file
-    genericScript = append(genericScript, "#! /bin/bash\n")
+    script = append(script, "#! /bin/bash\n")
 
     // Setup script
-    macos.InstallXCode(commander(&genericScript))
-    macos.InstallBrew(commander(&genericScript))
-    macos.InstallLangs(commander(&genericScript), []string{"python", "ruby", "yolo"})
+    macos.InstallXCode(commander(&script))
+    macos.InstallBrew(commander(&script))
+    macos.InstallLangs(commander(&script), install.Languages)
+    macos.InstallTerminals(commander(&script), install.Terminals)
+    macos.InstallShells(commander(&script), install.Shells)
 
     // Generate a new uuid4
     uuid, err := uuid.NewRandom(); if err != nil {
@@ -74,7 +85,7 @@ func GenerateGeneric() (string, error) {
     }
 
     // Iterate over the script and start writing it to a file 
-    for _, command := range genericScript {
+    for _, command := range script {
         _, err := f.WriteString(command + "\n"); if err != nil {
             f.Close()
             return "", err
