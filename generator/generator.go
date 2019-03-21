@@ -51,10 +51,11 @@ func GenerateGeneric() (string, error) {
     }
 
     install := InstallRequest{
-        Languages: []string{"python", "ruby", "yolo"},
+        Languages: []string{"python", "ruby", "yolo", "java"},
         Terminals: []string{"hyper", "fake-terminal", "iterm2", "yeet"},
         Shells: []string{"zsh", "fish", "fsdfd"},
         Browsers: []string{"google chrome", "opera",},
+        Editors: []string{"vim", "macvim", "sublime-text"},
     }
 
 
@@ -71,6 +72,7 @@ func GenerateGeneric() (string, error) {
     macos.InstallTerminals(commander(&script), install.Terminals)
     macos.InstallShells(commander(&script), install.Shells)
     macos.InstallBrowsers(commander(&script), install.Browsers)
+    macos.InstallEditors(commander(&script), install.Editors)
 
     // Generate a new uuid4
     uuid, err := uuid.NewRandom(); if err != nil {
