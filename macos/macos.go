@@ -39,7 +39,15 @@ var supportedEditors = map[string]string {
 }
 
 var supportedTools = map[string]string {
-
+    "basictex": "basictex",
+    "cheatsheet": "cheatsheet",
+    "docker": "docker",
+    "heroku": "heroku",
+    "insomnia": "insomnia",
+    "mactext": "mactext",
+    "postman": "postman",
+    "vagrant": "vagrant",
+    "caffeine": "caffeine",
 }
 
 var supportedDatabases = map[string]string {
@@ -197,7 +205,20 @@ func InstallEditors(addCmd func(string, int), editors []string) {
 }
 
 // InstallTools will add all requested tool setup items to the script
-func InstallTools(addCmd func(string, int)) {
+func InstallTools(addCmd func(string, int), tools []string) {
+    if len(tools) == 0 {
+        return
+    }
+
+    addCmd("# Install all tools requested", 0)
+    addCmd("echo \"Installing selected tools on to the system\"", 0)
+
+    //for _, tool := range tools {
+        //if toolPkg, ok := supportedTools[tool]; ok {
+              
+        //}
+    // }
+    addCmd("", 0)
 }
 
 // InstallDatabases will add all requested database items to the script
