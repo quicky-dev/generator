@@ -31,7 +31,11 @@ var supportedBrowsers = map[string]string {
 }
 
 var supportedEditors = map[string]string {
-
+    "atom":"atom",
+    "vscode": "visual-studio-code",
+    "vim": "vim",
+    "macvim": "macvim",
+    "sublime-text": "sublime-text",
 }
 
 var supportedTools = map[string]string {
@@ -96,8 +100,9 @@ func InstallLangs(addCmd func(string, int), langs []string) {
             // Java needs to be installed with cask
             if lang == "java" {
                 addCmd("brew cask install " + langPkg, 0)
+            }else {
+                addCmd("brew install " + langPkg, 0)
             }
-            addCmd("brew install " + langPkg, 0)
        }
     }
     addCmd("", 0) 
@@ -150,6 +155,7 @@ func InstallShells(addCmd func(string, int), shells []string) {
             }
         }
     }
+    addCmd("", 0)
 }
 
 // InstallBrowsers will add all requested browser setup items to the script
@@ -166,16 +172,32 @@ func InstallBrowsers(addCmd func(string, int), browsers []string) {
             addCmd("brew cask install " + browserPkg, 0)
         }
     }
+    addCmd("", 0)
 }
 
 // InstallEditors will add all requested editor setup items to the script
-func InstallEditors(addCmd func(string, int)) {
+func InstallEditors(addCmd func(string, int), editors []string) {
+    if len(editors) == 0 {
+        return
+    }
 
+    addCmd("# Install all editors requested", 0)
+    addCmd("echo \"Installing selected editors on to the system\"", 0)
+    
+    for _, editor := range editors {
+        if editorPkg, ok := supportedEditors[editor]; ok {
+            if editorPkg == "vim" {
+                addCmd("brew install vim", 0)
+            }else{
+                addCmd("brew cask install " + editorPkg, 0)
+            }
+        }
+    }
+    addCmd("", 0)
 }
 
 // InstallTools will add all requested tool setup items to the script
 func InstallTools(addCmd func(string, int)) {
-
 }
 
 // InstallDatabases will add all requested database items to the script
