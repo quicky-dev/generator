@@ -1,22 +1,26 @@
 package macos
 
-// Supported languages
+// Supported languages (Currently, only latest)
 var supportedLangs = map[string]string {
     "python":"python",
     "ruby": "ruby",
     "node": "node",
     "go": "go",
     "rust": "rust",
+    "java": "java",
 }
 
 // Supported terminals
 var supportedTerminals = map[string]string {
-
+    "iterm2": "iterm2",
+    "hyper": "hyper",
 }
+
 
 // Supported shells
 var supportedShells = map[string]string {
-
+    "zsh": "zsh",
+    "fish": "fish",
 }
 
 // Supported browsers
@@ -78,27 +82,74 @@ func InstallBrew(addCmd func(string, int)) {
 
 // InstallLangs installs all languages that are supported by the script factory
 func InstallLangs(addCmd func(string, int), langs []string) {
+    
+    if len(langs) == 0 {
+        return 
+    }
 
-   addCmd("# Install all languages requested", 0)
-   addCmd("echo \"Installing selected languages on to the system\"", 0)
+    addCmd("# Install all languages requested", 0)
+    addCmd("echo \"Installing selected languages on to the system\"", 0)
 
-   // Iterate over all the selected languages
-   for _, lang := range langs {
-       if lang, ok := supportedLangs[lang]; ok {
-            addCmd("brew install " + lang, 0)
+    // Iterate over all the selected languages
+    for _, lang := range langs {
+       if langPkg, ok := supportedLangs[lang]; ok {
+            // Java needs to be installed with cask
+            if lang == "java" {
+                addCmd("brew cask install " + langPkg, 0)
+            }
+            addCmd("brew install " + langPkg, 0)
        }
-   }
-   addCmd("", 0) 
+    }
+    addCmd("", 0) 
 }
 
 // InstallTerminals will add all requested terminal emulator setup items to the script
-func InstallTerminals(addCmd func(string, int)) {
+func InstallTerminals(addCmd func(string, int), terminals []string){
 
+    // If tehre are no terminals to install, return
+    if len(terminals) == 0 {
+
+    }
+
+    addCmd("# Install all terminals requested", 0)
+    addCmd("echo \"Installing selected terminal emulators on to the system\"", 0)
+
+    // Iterate over all the selected terminals
+    for _, terminal := range terminals {
+        if terminalPkg, ok := supportedTerminals[terminal]; ok {
+            addCmd("brew cask install " + terminalPkg, 0)
+        }
+    }
+    addCmd("", 0)
 }
 
 // InstallShells will add all requested shells setup items to the script
-func InstallShells(addCmd func(string, int)) {
-    
+func InstallShells(addCmd func(string, int), shells []string) {
+
+    // Temporary workaround for working with multiple shells, the first one is always the primary
+    primary := shells[0]
+    // If there are no shells to install, return
+    if len(shells) == 0 {
+        return
+    }
+
+        addCmd("# Install all shells requested", 0)
+        addCmd("echo \"Installing selected shells on to the system\"", 0)
+
+    for _, shell := range shells {
+        if shellPkg, ok := supportedShells[shell]; ok {
+            addCmd("brew install " + shellPkg, 0)
+
+            // Set the just installed shell to be the primary one
+            if shellPkg == primary {
+                addCmd("", 0)
+                addCmd("# Configuring the shell you selected as your primary shell to be just that", 0)
+                addCmd("echo \"Setting " + shellPkg + " to be your primary shell.\"", 0)
+                addCmd("sudo -s \"echo /usr/local/bin/" + shellPkg + " >> /etc/shells\" && chsh -s /usr/local/bin/" + shellPkg, 0)
+                addCmd("", 0)
+            }
+        }
+    }
 }
 
 // InstallBrowsers will add all requested browser setup items to the script
