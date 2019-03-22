@@ -19,9 +19,19 @@ type category struct{
     Items []string `json:"Items"`
 }
 
-// InstallRequest is used for unmarshalling json objects directly into a request object
-// that the script factory can then digest and work with
+// InstallRequest is used for unmarshalling json objects directly from a user request into an install request
 type InstallRequest struct{
+    Languages []string `json:"Languages"`
+    Terminals []string `json:"Terminals"`
+    Shells    []string `json:"Shells"`
+    Browsers  []string `json:"Browsers"`
+    Editors   []string `json:"Editors"`
+    Tools     []string `json:"Tools"`
+    Databases []string `json:"Databases"`
+}
+
+// SupportedPackages is a struct for maintaining supported packages within our factory
+type SupportedPackages struct{
     Languages category `json:"Languages"`
     Terminals category `json:"Terminals"`
     Shells    category `json:"Shells"`
@@ -31,8 +41,9 @@ type InstallRequest struct{
     Databases category `json:"Databases"`
 }
 
-
-func supportedMacPkgs() InstallRequest {
+// supportedmacPkgs gets us the list of supported packages
+func supportedMacPkgs() SupportedPackages {
+    // All the available categories we have
     pkgCategories := []string{
         "Languages",
         "Terminals",
@@ -43,6 +54,7 @@ func supportedMacPkgs() InstallRequest {
         "Databases",
     }
 
+    // Descriptions for all the categories we have so far
     pkgDesc := []string{
         "Select all programming languages of your choice",
         "Select all Terminal emulators of your choice",
@@ -52,7 +64,8 @@ func supportedMacPkgs() InstallRequest {
         "Select all developer tools of your choice",
         "Select all databases of your choice",
     }
-    
+   
+    // All the available packages we have for the items so far
     pkgItems := []map[string]string{
         macos.SupportedLangs,
         macos.SupportedTerminals,
@@ -63,31 +76,37 @@ func supportedMacPkgs() InstallRequest {
         macos.SupportedDatabases,
     }
 
+    // the pkg map to map strings (category names) to category structs
     macPkgMap := map[string]category{}
     
-    for index, currCategory := range pkgCategories {
+    // Iterate over all the categories
+    for index, currCategoryName := range pkgCategories {
         var currentItems []string
 
+        // Append all keys (package names) into the current items string array
         for k := range pkgItems[index] {
             currentItems = append(currentItems, k)
         }
 
+        // Create the category struct which will keep the current packages description
+        // and it's Items bundled together
         categoryStruct := category{
             Description: pkgDesc[index],
             Items: currentItems,
         }
 
-        macPkgMap[currCategory] = categoryStruct 
+        // Map the current category name to the category struct
+        macPkgMap[currCategoryName] = categoryStruct 
     }
 
-    macPkgs := InstallRequest{}
+    // Create the install request and bind it into the mapStructure
+    macPkgs := SupportedPackages{}
     mapstructure.Decode(macPkgMap, &macPkgs)
     return macPkgs
 }
 
 // MacPkgs is a list of All available packages
 var MacPkgs = supportedMacPkgs()
-
 
 // Helper function for inserting commands into the overall script slice.
 // Very useful for not having to call append manually every time
@@ -136,7 +155,7 @@ func GenerateGeneric() (string, error) {
         },
     }
 
-    var install = InstallRequest{} 
+    var install = SupportedPackages{} 
     mapstructure.Decode(genericPkgs, &install)
 
     script := []string{}
