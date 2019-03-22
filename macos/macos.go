@@ -1,7 +1,8 @@
 package macos
 
+
 // Supported languages (Currently, only latest)
-var supportedLangs = map[string]string {
+var SupportedLangs = map[string]string {
     "python":"python",
     "ruby": "ruby",
     "node": "node",
@@ -11,26 +12,26 @@ var supportedLangs = map[string]string {
 }
 
 // Supported terminals
-var supportedTerminals = map[string]string {
+var SupportedTerminals = map[string]string {
     "iterm2": "iterm2",
     "hyper": "hyper",
 }
 
 
 // Supported shells
-var supportedShells = map[string]string {
+var SupportedShells = map[string]string {
     "zsh": "zsh",
     "fish": "fish",
 }
 
 // Supported browsers
-var supportedBrowsers = map[string]string {
+var SupportedBrowsers = map[string]string {
     "google chrome": "google-chrome",
     "firefox": "firefox",
     "opera": "opera",
 }
 
-var supportedEditors = map[string]string {
+var SupportedEditors = map[string]string {
     "atom":"atom",
     "vscode": "visual-studio-code",
     "vim": "vim",
@@ -38,7 +39,7 @@ var supportedEditors = map[string]string {
     "sublime-text": "sublime-text",
 }
 
-var supportedTools = map[string]string {
+var SupportedTools = map[string]string {
     "basictex": "basictex",
     "cheatsheet": "cheatsheet",
     "docker": "docker",
@@ -50,7 +51,9 @@ var supportedTools = map[string]string {
     "caffeine": "caffeine",
 }
 
-var supportedDatabases = map[string]string {
+
+
+var SupportedDatabases = map[string]string {
 
 }
 
@@ -104,7 +107,7 @@ func InstallLangs(addCmd func(string, int), langs []string) {
 
     // Iterate over all the selected languages
     for _, lang := range langs {
-       if langPkg, ok := supportedLangs[lang]; ok {
+       if langPkg, ok := SupportedLangs[lang]; ok {
             // Java needs to be installed with cask
             if lang == "java" {
                 addCmd("brew cask install " + langPkg, 0)
@@ -129,7 +132,7 @@ func InstallTerminals(addCmd func(string, int), terminals []string){
 
     // Iterate over all the selected terminals
     for _, terminal := range terminals {
-        if terminalPkg, ok := supportedTerminals[terminal]; ok {
+        if terminalPkg, ok := SupportedTerminals[terminal]; ok {
             addCmd("brew cask install " + terminalPkg, 0)
         }
     }
@@ -150,7 +153,7 @@ func InstallShells(addCmd func(string, int), shells []string) {
     addCmd("echo \"Installing selected shells on to the system\"", 0)
 
     for _, shell := range shells {
-        if shellPkg, ok := supportedShells[shell]; ok {
+        if shellPkg, ok := SupportedShells[shell]; ok {
             addCmd("brew install " + shellPkg, 0)
 
             // Set the just installed shell to be the primary one
@@ -176,7 +179,7 @@ func InstallBrowsers(addCmd func(string, int), browsers []string) {
     addCmd("echo \"Installing selected browsers on to the system\"", 0)
 
     for _, browser := range browsers {
-        if browserPkg, ok := supportedBrowsers[browser]; ok {
+        if browserPkg, ok := SupportedBrowsers[browser]; ok {
             addCmd("brew cask install " + browserPkg, 0)
         }
     }
@@ -193,7 +196,7 @@ func InstallEditors(addCmd func(string, int), editors []string) {
     addCmd("echo \"Installing selected editors on to the system\"", 0)
     
     for _, editor := range editors {
-        if editorPkg, ok := supportedEditors[editor]; ok {
+        if editorPkg, ok := SupportedEditors[editor]; ok {
             if editorPkg == "vim" {
                 addCmd("brew install vim", 0)
             }else{
