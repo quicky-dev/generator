@@ -15,8 +15,8 @@ var filePath string;
 var debug bool;
 
 type category struct{
-    Description string
-    Items []string
+    Description string `json:"Description"`
+    Items []string `json:"Items"`
 }
 
 // InstallRequest is used for unmarshalling json objects directly into a request object
