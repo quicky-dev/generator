@@ -14,11 +14,6 @@ import (
 var filePath string;
 var debug bool;
 
-type category struct{
-    Description string `json:"Description"`
-    Items []string `json:"Items"`
-}
-
 // InstallRequest is used for unmarshalling json objects directly from a user request into an install request
 type InstallRequest struct{
     Languages []string `json:"Languages"`
@@ -28,6 +23,11 @@ type InstallRequest struct{
     Editors   []string `json:"Editors"`
     Tools     []string `json:"Tools"`
     Databases []string `json:"Databases"`
+}
+
+type category struct{
+    Description string `json:"Description"`
+    Items []string `json:"Items"`
 }
 
 // SupportedPackages is a struct for maintaining supported packages within our factory
@@ -124,6 +124,33 @@ func Init(path string, debugMode bool) bool {
    return true
 }
 
+func createFile(script []string) (string, error) {
+    // Generate a new uuid4
+    uuid, err := uuid.NewRandom(); if err != nil {
+        return "", err
+    }
+
+    // Convert the uuid4 to a string
+    fileName := uuid.String()
+    file := path.Join(filePath, fileName)
+
+    // Attempt to create a file
+    f, err := os.Create(file); if err != nil {
+        return "", err
+    }
+
+    // Iterate over the script and start writing it to a file 
+    for _, command := range script {
+        _, err := f.WriteString(command + "\n"); if err != nil {
+            f.Close()
+            return "", err
+        }
+    }
+    f.Close()
+
+    return file, nil
+}
+
 // GenerateGeneric will generate a generic developers setup for the user to
 // to run locally
 func GenerateGeneric() (string, error) {
@@ -143,7 +170,7 @@ func GenerateGeneric() (string, error) {
         },
         "Shells":{
             Description: "Select all Terminal shells of your choice",
-            Items: []string{"hyper", "fake-terminal", "itemr2", "yeet"},
+            Items: []string{"hyper", "fake-terminal", "iterm2", "yeet"},
         },
         "Browsers":{
             Description: "Select the web browser of your choice",
@@ -173,28 +200,10 @@ func GenerateGeneric() (string, error) {
     macos.InstallBrowsers(commander(&script), install.Browsers.Items)
     macos.InstallEditors(commander(&script), install.Editors.Items)
 
-    // Generate a new uuid4
-    uuid, err := uuid.NewRandom(); if err != nil {
+    file, err := createFile(script); if err != nil {
         return "", err
     }
 
-    // Convert the uuid4 to a string
-    fileName := uuid.String()
-    file := path.Join(filePath, fileName)
-
-    // Attempt to create a file
-    f, err := os.Create(file); if err != nil {
-        return "", err
-    }
-
-    // Iterate over the script and start writing it to a file 
-    for _, command := range script {
-        _, err := f.WriteString(command + "\n"); if err != nil {
-            f.Close()
-            return "", err
-        }
-    }
-    f.Close()
     return file, nil
 }
 

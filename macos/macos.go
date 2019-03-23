@@ -1,7 +1,7 @@
 package macos
 
 
-// Supported languages (Currently, only latest)
+// SupportedLangs is a map of supported macos programming languages(Currently, only latest)
 var SupportedLangs = map[string]string {
     "python":"python",
     "ruby": "ruby",
@@ -11,26 +11,27 @@ var SupportedLangs = map[string]string {
     "java": "java",
 }
 
-// Supported terminals
+// SupportedTerminals is a map of supported macos terminals 
 var SupportedTerminals = map[string]string {
     "iterm2": "iterm2",
     "hyper": "hyper",
 }
 
 
-// Supported shells
+// SupportedShells is a map of supported macos Shells
 var SupportedShells = map[string]string {
     "zsh": "zsh",
     "fish": "fish",
 }
 
-// Supported browsers
+// SupportedBrowsers is a map of supported macos Browsers
 var SupportedBrowsers = map[string]string {
     "google chrome": "google-chrome",
     "firefox": "firefox",
     "opera": "opera",
 }
 
+// SupportedEditors is a mpa of the supported macos Editors
 var SupportedEditors = map[string]string {
     "atom":"atom",
     "vscode": "visual-studio-code",
@@ -39,6 +40,7 @@ var SupportedEditors = map[string]string {
     "sublime-text": "sublime-text",
 }
 
+// SupporterdTools is a map of the supported macos toolings
 var SupportedTools = map[string]string {
     "basictex": "basictex",
     "cheatsheet": "cheatsheet",
@@ -51,8 +53,7 @@ var SupportedTools = map[string]string {
     "caffeine": "caffeine",
 }
 
-
-
+// SupportedDatabases is a map of the supported macos databases 
 var SupportedDatabases = map[string]string {
 
 }
