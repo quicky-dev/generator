@@ -1,13 +1,11 @@
 package generator
 
 import (
-    "os"
-    "path"
     "strings"
     "errors"
 
     "github.com/quicky-dev/generator/macos"
-    "github.com/google/uuid"
+    "github.com/quicky-dev/generator/util"
     "github.com/mitchellh/mapstructure"
 )
 
@@ -42,7 +40,7 @@ type SupportedPackages struct{
 }
 
 // supportedmacPkgs gets us the list of supported packages
-func supportedMacPkgs() SupportedPackages {
+func getSupportedMacPkgs() SupportedPackages {
     // All the available categories we have
     pkgCategories := []string{
         "Languages",
@@ -105,54 +103,7 @@ func supportedMacPkgs() SupportedPackages {
     return macPkgs
 }
 
-// MacPkgs is a list of All available packages
-var MacPkgs = supportedMacPkgs()
-
-// Helper function for inserting commands into the overall script slice.
-// Very useful for not having to call append manually every time
-func commander(script *[]string) func(string, int) {
-    return func (command string, indent int) {
-        indents := strings.Repeat("\t", indent)
-        *script = append(*script, indents + command) 
-    }
-}
-
-// Init will initialize the modules filepath for where to save the generated files
-func Init(path string, debugMode bool) bool {
-   filePath = path
-   debug = debugMode
-   return true
-}
-
-// Create the script file
-func createFile(script []string) (string, error) {
-    // Generate a new uuid4
-    uuid, err := uuid.NewRandom(); if err != nil {
-        return "", err
-    }
-
-    // Convert the uuid4 to a string
-    fileName := uuid.String()
-    file := path.Join(filePath, fileName)
-
-    // Attempt to create a file
-    f, err := os.Create(file); if err != nil {
-        return "", err
-    }
-
-    // Write the script to file
-    for _, command := range script {
-        _, err := f.WriteString(command + "\n"); if err != nil {
-            f.Close()
-            return "", err
-        }
-    }
-
-    // Success
-    f.Close()
-    return file, nil
-}
-
+// List of all the generic macpkgs provided
 var genericMacPkgs = map[string]category{
         "Languages":{
             Description:"Select all programming languages of your choice",
@@ -176,14 +127,33 @@ var genericMacPkgs = map[string]category{
         },
 }
 
+// MacPkgs is a list of All available packages
+var MacPkgs = getSupportedMacPkgs()
+
+// Init will initialize the modules filepath for where to save the generated files
+func Init(path string, debugMode bool) bool {
+   filePath = path
+   debug = debugMode
+   return true
+}
+
+// Helper function for inserting commands into the overall script slice.
+// Very useful for not having to call append manually every time
+func commander(script *[]string) func(string, int) {
+    return func (command string, indent int) {
+        indents := strings.Repeat("\t", indent)
+        *script = append(*script, indents + command) 
+    }
+}
+
 // GenerateGeneric will generate a generic developers setup for the user to
 // to run locally
 func GenerateGeneric() (string, error) {
-
     if filePath == "" {
         return "", errors.New("The current file path isnt set")
     }
 
+    // Decode a map into a 
     var install = SupportedPackages{} 
     mapstructure.Decode(genericMacPkgs, &install)
 
@@ -202,13 +172,12 @@ func GenerateGeneric() (string, error) {
     macos.InstallBrowsers(commander(&script), install.Browsers.Items)
     macos.InstallEditors(commander(&script), install.Editors.Items)
 
-    return createFile(script)
+    return util.CreateFile(filePath, script)
 }
 
-// GenerateDynamic generates the dynamic script
+// GenerateDynamic generates a script based on what the user has entered
 func GenerateDynamic(install InstallRequest) (string, error) {
     script := []string{}
-
     script = append(script, "#! /bin/bash\n")
 
     macos.InstallXCode(commander(&script))
@@ -219,5 +188,5 @@ func GenerateDynamic(install InstallRequest) (string, error) {
     macos.InstallBrowsers(commander(&script), install.Browsers)
     macos.InstallEditors(commander(&script), install.Editors)
 
-    return createFile(script) 
+    return util.CreateFile(filePath, script) 
 }
