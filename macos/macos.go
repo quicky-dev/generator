@@ -40,7 +40,7 @@ var SupportedEditors = map[string]string {
     "sublime-text": "sublime-text",
 }
 
-// SupporterdTools is a map of the supported macos toolings
+// SupportedTools is a map of the supported macos toolings
 var SupportedTools = map[string]string {
     "basictex": "basictex",
     "cheatsheet": "cheatsheet",

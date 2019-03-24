@@ -124,6 +124,7 @@ func Init(path string, debugMode bool) bool {
    return true
 }
 
+// Create the script file
 func createFile(script []string) (string, error) {
     // Generate a new uuid4
     uuid, err := uuid.NewRandom(); if err != nil {
@@ -139,27 +140,20 @@ func createFile(script []string) (string, error) {
         return "", err
     }
 
-    // Iterate over the script and start writing it to a file 
+    // Write the script to file
     for _, command := range script {
         _, err := f.WriteString(command + "\n"); if err != nil {
             f.Close()
             return "", err
         }
     }
-    f.Close()
 
+    // Success
+    f.Close()
     return file, nil
 }
 
-// GenerateGeneric will generate a generic developers setup for the user to
-// to run locally
-func GenerateGeneric() (string, error) {
-
-    if filePath == "" {
-        return "", errors.New("The current file path isnt set")
-    }
-
-    genericPkgs := map[string]category{
+var genericMacPkgs = map[string]category{
         "Languages":{
             Description:"Select all programming languages of your choice",
             Items: []string{"python", "ruby", "yolo", "java"},
@@ -180,10 +174,18 @@ func GenerateGeneric() (string, error) {
             Description:"Select the text editor of your choice",
             Items: []string{"vim", "macvim", "sublime-text"},
         },
+}
+
+// GenerateGeneric will generate a generic developers setup for the user to
+// to run locally
+func GenerateGeneric() (string, error) {
+
+    if filePath == "" {
+        return "", errors.New("The current file path isnt set")
     }
 
     var install = SupportedPackages{} 
-    mapstructure.Decode(genericPkgs, &install)
+    mapstructure.Decode(genericMacPkgs, &install)
 
     script := []string{}
 
@@ -200,11 +202,22 @@ func GenerateGeneric() (string, error) {
     macos.InstallBrowsers(commander(&script), install.Browsers.Items)
     macos.InstallEditors(commander(&script), install.Editors.Items)
 
-    file, err := createFile(script); if err != nil {
-        return "", err
-    }
-
-    return file, nil
+    return createFile(script)
 }
 
+// GenerateDynamic generates the dynamic script
+func GenerateDynamic(install InstallRequest) (string, error) {
+    script := []string{}
 
+    script = append(script, "#! /bin/bash\n")
+
+    macos.InstallXCode(commander(&script))
+    macos.InstallBrew(commander(&script))
+    macos.InstallLangs(commander(&script), install.Languages)
+    macos.InstallTerminals(commander(&script), install.Terminals)
+    macos.InstallShells(commander(&script), install.Shells)
+    macos.InstallBrowsers(commander(&script), install.Browsers)
+    macos.InstallEditors(commander(&script), install.Editors)
+
+    return createFile(script) 
+}
