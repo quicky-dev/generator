@@ -208,7 +208,7 @@ func GenerateGeneric() (Script, error) {
 // GenerateDynamic generates a script based on what the user has entered
 func GenerateDynamic(install InstallRequest) (Script, error) {
     script := []string{}
-    script = append(script, "#! /bin/bash\n")
+    script = append(script, "#!/bin/bash\n")
 
     // Setup the setup script
     macos.InstallXCode(commander(&script))
