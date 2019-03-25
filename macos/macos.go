@@ -47,10 +47,25 @@ var SupportedTools = map[string]string {
     "docker": "docker",
     "heroku": "heroku",
     "insomnia": "insomnia",
-    "mactext": "mactext",
+    "mactex": "mactex",
     "postman": "postman",
     "vagrant": "vagrant",
     "caffeine": "caffeine",
+    "flux": "flux",
+    "ngrok": "ngrok",
+}
+
+var supportedCaskTools = map[string]string {
+    "docker":"docker",
+    "vlc": "vlc",
+    "basictex":"basictext",
+    "cheatsheet": "cheatsheet",
+    "vagrant": "vagrant",
+    "caffeine": "caffeine",
+    "flux": "flux",
+    "mactex": "mactext",
+    "ngrok": "ngrok",
+
 }
 
 // SupportedDatabases is a map of the supported macos databases 
@@ -217,16 +232,38 @@ func InstallTools(addCmd func(string, int), tools []string) {
     addCmd("# Install all tools requested", 0)
     addCmd("echo \"Installing selected tools on to the system\"", 0)
 
-    //for _, tool := range tools {
-        //if toolPkg, ok := supportedTools[tool]; ok {
-              
-        //}
-    // }
+    for _, tool := range tools {
+        if toolPkg, ok := SupportedTools[tool]; ok {
+            cmd := "brew"
+            if _, ok := supportedCaskTools[toolPkg]; ok {
+                cmd += " cask"
+            }
+            cmd += " install " + toolPkg 
+            addCmd(cmd, 0)
+        }
+    }
     addCmd("", 0)
 }
 
 // InstallDatabases will add all requested database items to the script
-func InstallDatabases(addCmd func(string, int)) {
+func InstallDatabases(addCmd func(string, int), databases []string) {
+    if len(databases) == 0 {
+        return
+    }
 
+    addCmd("# Install all databases requested", 0)
+    addCmd("echo \"Installing selected tools on to the system\"", 0)
+
+    for _, database := range databases {
+        if databasePkg, ok := SupportedDatabases[database]; ok {
+            addCmd("brew install " + databasePkg, 0)
+
+            // Handle mongodb install specially
+            if databasePkg == "mongodb"  {
+                addCmd("mkdir -p /data/db", 0)
+                addCmd("sudo chown -R $USER /data/db", 0)
+            }
+        }
+    }
 }
 
