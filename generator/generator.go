@@ -125,6 +125,14 @@ var genericMacPkgs = map[string]category{
             Description:"Select the text editor of your choice",
             Items: []string{"vim", "macvim", "sublime-text"},
         },
+        "Tools":{
+            Description:"Select the toolings of your choice",
+            Items: []string{"vagrant", "heroku", "docker"},
+        },
+        "Databases":{
+            Description:"Select the databases of your choice",
+            Items: []string{"mongoDB"},
+        },
 }
 
 // MacPkgs is a list of All available packages
@@ -177,6 +185,8 @@ func GenerateGeneric() (Script, error) {
     macos.InstallShells(commander(&script), install.Shells.Items)
     macos.InstallBrowsers(commander(&script), install.Browsers.Items)
     macos.InstallEditors(commander(&script), install.Editors.Items)
+    macos.InstallTools(commander(&script), install.Tools.Items)
+    macos.InstallDatabases(commander(&script), install.Databases.Items)
 
     if debug == true {
         uuid, err := util.CreateFile(filePath, script); if err != nil {
@@ -218,6 +228,8 @@ func GenerateDynamic(install InstallRequest) (Script, error) {
     macos.InstallShells(commander(&script), install.Shells)
     macos.InstallBrowsers(commander(&script), install.Browsers)
     macos.InstallEditors(commander(&script), install.Editors)
+    macos.InstallTools(commander(&script), install.Tools)
+    macos.InstallDatabases(commander(&script), install.Databases)
 
     // If in debug mode
     if debug == true {
