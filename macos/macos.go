@@ -55,7 +55,7 @@ var SupportedTools = map[string]string {
 
 // SupportedDatabases is a map of the supported macos databases 
 var SupportedDatabases = map[string]string {
-
+    "mongoDB": "mongodb",
 }
 
 // InstallXCode checks if xcode has been installed, which is needed for 
@@ -125,7 +125,7 @@ func InstallTerminals(addCmd func(string, int), terminals []string){
 
     // If tehre are no terminals to install, return
     if len(terminals) == 0 {
-
+        return
     }
 
     addCmd("# Install all terminals requested", 0)
@@ -143,12 +143,12 @@ func InstallTerminals(addCmd func(string, int), terminals []string){
 // InstallShells will add all requested shells setup items to the script
 func InstallShells(addCmd func(string, int), shells []string) {
 
-    // Temporary workaround for working with multiple shells, the first one is always the primary
-    primary := shells[0]
     // If there are no shells to install, return
     if len(shells) == 0 {
         return
     }
+    // Temporary workaround for working with multiple shells, the first one is always the primary
+    primary := shells[0]
 
     addCmd("# Install all shells requested", 0)
     addCmd("echo \"Installing selected shells on to the system\"", 0)

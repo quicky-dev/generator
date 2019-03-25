@@ -49,6 +49,7 @@ func getSupportedMacPkgs() SupportedPackages {
         "Browsers",
         "Editors",
         "Tools",
+        "Databases",
     }
 
     // Descriptions for all the categories we have so far
