@@ -130,6 +130,12 @@ var genericMacPkgs = map[string]category{
 // MacPkgs is a list of All available packages
 var MacPkgs = getSupportedMacPkgs()
 
+// Script binds the scripts payload to a uuid for storing and retrieiving from aws
+type Script struct{
+    UUID    string
+    Payload string
+}
+
 // Init will initialize the modules filepath for where to save the generated files
 func Init(path string, debugMode bool) bool {
    filePath = path
@@ -148,9 +154,9 @@ func commander(script *[]string) func(string, int) {
 
 // GenerateGeneric will generate a generic developers setup for the user to
 // to run locally
-func GenerateGeneric() (string, error) {
+func GenerateGeneric() (Script, error) {
     if filePath == "" {
-        return "", errors.New("The current file path isnt set")
+        return Script{}, errors.New("The current file path isnt set")
     }
 
     // Convert the map of categories into 
@@ -173,14 +179,34 @@ func GenerateGeneric() (string, error) {
     macos.InstallEditors(commander(&script), install.Editors.Items)
 
     if debug == true {
-        return util.CreateFile(filePath, script)
+        uuid, err := util.CreateFile(filePath, script); if err != nil {
+            return Script{}, nil
+        }
+
+        // Bind script uuid and payload together
+        scriptInfo := Script{
+            UUID: uuid,
+            Payload: strings.Join(script[:], "\n"),
+        }
+
+        return scriptInfo, nil
     }
 
-    return strings.Join(script[:], "\n"), nil
+    uuid, err := util.GenerateUUID(); if err != nil {
+        return Script{}, err
+    }
+    
+    scriptInfo := Script{
+        UUID: uuid,
+        Payload: strings.Join(script[:], "\n"),
+    }
+
+    return scriptInfo, nil
+
 }
 
 // GenerateDynamic generates a script based on what the user has entered
-func GenerateDynamic(install InstallRequest) (string, error) {
+func GenerateDynamic(install InstallRequest) (Script, error) {
     script := []string{}
     script = append(script, "#! /bin/bash\n")
 
@@ -193,9 +219,31 @@ func GenerateDynamic(install InstallRequest) (string, error) {
     macos.InstallBrowsers(commander(&script), install.Browsers)
     macos.InstallEditors(commander(&script), install.Editors)
 
+    // If in debug mode
     if debug == true {
-        return util.CreateFile(filePath, script)
+
+        uuid, err := util.CreateFile(filePath, script); if err != nil {
+            return Script{}, err
+        }
+
+        generatedScript := Script{
+            UUID: uuid,
+            Payload: strings.Join(script[:], ""),
+        }
+
+        return generatedScript, nil
     }
 
-    return strings.Join(script[:], "\n"), nil
+    // Generate a new UUID
+    uuid, err := util.GenerateUUID(); if err != nil {
+        return Script{}, err
+    }
+
+    // bind the script UUID to it's payload
+    scriptInfo := Script{
+        UUID: uuid,
+        Payload: strings.Join(script[:], "\n"),
+    }
+
+    return scriptInfo, nil
 }

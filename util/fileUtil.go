@@ -6,15 +6,22 @@ import (
 
     "github.com/google/uuid"
 )
-// CreateFile creates the output script and writes it to a file
-func CreateFile(filePath string, script []string) (string, error) {
-    // Generate a new uuid4
-    uuid, err := uuid.NewRandom(); if err != nil {
+
+// GenerateUUID generates a new UUID4
+func GenerateUUID() (string, error) {
+    uuid, err := uuid.NewRandom(); if err != nil  {
         return "", err
     }
 
-    // Convert the uuid4 to a string
-    fileName := uuid.String()
+    return uuid.String(), nil
+}
+// CreateFile creates the output script and writes it to a file
+func CreateFile(filePath string, script []string) (string, error) {
+
+    // Generate a new UUID
+    fileName, err := GenerateUUID(); if err != nil {
+        return "", err
+    }
     file := path.Join(filePath, fileName)
 
     // Attempt to create a file
