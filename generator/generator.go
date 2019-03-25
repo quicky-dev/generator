@@ -107,15 +107,15 @@ func getSupportedMacPkgs() SupportedPackages {
 var genericMacPkgs = map[string]category{
         "Languages":{
             Description:"Select all programming languages of your choice",
-            Items: []string{"python", "ruby", "yolo", "java"},
+            Items: []string{"python", "ruby", "java"},
         },
         "Terminals":{
-            Description: "testsjk",
+            Description: "Select all terminal emulators of your choice",
             Items: []string{},
         },
         "Shells":{
             Description: "Select all Terminal shells of your choice",
-            Items: []string{"hyper", "fake-terminal", "iterm2", "yeet"},
+            Items: []string{"hyper", "iterm2", "yeet"},
         },
         "Browsers":{
             Description: "Select the web browser of your choice",
@@ -153,7 +153,7 @@ func GenerateGeneric() (string, error) {
         return "", errors.New("The current file path isnt set")
     }
 
-    // Decode a map into a 
+    // Convert the map of categories into 
     var install = SupportedPackages{} 
     mapstructure.Decode(genericMacPkgs, &install)
 
@@ -172,7 +172,11 @@ func GenerateGeneric() (string, error) {
     macos.InstallBrowsers(commander(&script), install.Browsers.Items)
     macos.InstallEditors(commander(&script), install.Editors.Items)
 
-    return util.CreateFile(filePath, script)
+    if debug == true {
+        return util.CreateFile(filePath, script)
+    }
+
+    return strings.Join(script[:], "\n"), nil
 }
 
 // GenerateDynamic generates a script based on what the user has entered
@@ -180,6 +184,7 @@ func GenerateDynamic(install InstallRequest) (string, error) {
     script := []string{}
     script = append(script, "#! /bin/bash\n")
 
+    // Setup the setup script
     macos.InstallXCode(commander(&script))
     macos.InstallBrew(commander(&script))
     macos.InstallLangs(commander(&script), install.Languages)
@@ -188,5 +193,9 @@ func GenerateDynamic(install InstallRequest) (string, error) {
     macos.InstallBrowsers(commander(&script), install.Browsers)
     macos.InstallEditors(commander(&script), install.Editors)
 
-    return util.CreateFile(filePath, script) 
+    if debug == true {
+        return util.CreateFile(filePath, script)
+    }
+
+    return strings.Join(script[:], "\n"), nil
 }
