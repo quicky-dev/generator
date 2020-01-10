@@ -23,6 +23,10 @@ type category struct {
 	Items       []string `json:"Items"`
 }
 
+type SupportedOSes struct {
+	OperatingSystems []string `json:"OSes"`
+}
+
 // SupportedPackages is a struct for maintaining supported packages within our factory
 type SupportedPackages struct {
 	Languages category `json:"Languages"`
@@ -45,6 +49,10 @@ func Init(path string, debugMode bool) bool {
 	filePath = path
 	debug = debugMode
 	return true
+}
+
+func GetSupportedOses() SupportedOSes {
+	return SupportedOSes{[]string{"MacOS", "Ubuntu"}}
 }
 
 // Helper function for inserting commands into the overall script slice.
