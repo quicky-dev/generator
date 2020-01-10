@@ -7,6 +7,8 @@ import (
 
 func main() {
 	generator.Init("output", false)
-	script, _ := generator.GenerateGeneric()
+
+	macos := generator.GetMacOSGenerator()
+	script, _ := macos.GenerateGenericScript()
 	fmt.Println(script)
 }

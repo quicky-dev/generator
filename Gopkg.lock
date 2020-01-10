@@ -17,27 +17,12 @@
   revision = "3536a929edddb9a5b34bd6861dc4a9647cb459fe"
   version = "v1.1.2"
 
-[[projects]]
-  branch = "master"
-  digest = "1:f6f4382dd89ab95ba94522c2958e9e1e9b899274e0eeeeadc80a94561f474828"
-  name = "github.com/quicky-dev/generator"
-  packages = [
-    "generator",
-    "macos",
-    "util"
-  ]
-  pruneopts = "UT"
-  revision = "d3471b0930293025980fb27741fcfeaa7d83d622"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/google/uuid",
-    "github.com/mitchellh/mapstructure",
-    "github.com/quicky-dev/generator/generator",
-    "github.com/quicky-dev/generator/macos",
-    "github.com/quicky-dev/generator/util"
+    "github.com/mitchellh/mapstructure"
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
