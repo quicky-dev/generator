@@ -12,17 +12,13 @@ func InstallDatabases(addCmd func(string, int), databases []string) {
 	}
 
 	addCmd("# Install all databases requested", 0)
-	addCmd("echo \"Installing selected tools on to the system\"", 0)
+	addCmd("echo \"Installing selected databases on to the system\"", 0)
 
 	for _, database := range databases {
 		if databasePkg, ok := SupportedDatabases[database]; ok {
-			addCmd("brew install "+databasePkg, 0)
-
 			// Handle mongodb install specially
 			if databasePkg == "mongodb" {
-				addCmd("", 0)
-				addCmd("mkdir -p /data/db", 0)
-				addCmd("sudo chown -R $USER /data/db", 0)
+				addCmd("sudo apt install -y mongodb", 0)
 			}
 		}
 	}

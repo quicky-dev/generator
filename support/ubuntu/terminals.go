@@ -2,8 +2,10 @@ package ubuntu
 
 // SupportedTerminals is a map of supported macos terminals
 var SupportedTerminals = map[string]string{
-	"iterm2": "iterm2",
-	"hyper":  "hyper",
+	"terminator": "terminator",
+	"guake":      "guake",
+	"tilda":      "tilda",
+	"eterm":      "eterm",
 }
 
 // InstallTerminals will add all requested terminal emulator setup items to the script
@@ -20,8 +22,7 @@ func InstallTerminals(addCmd func(string, int), terminals []string) {
 	// Iterate over all the selected terminals
 	for _, terminal := range terminals {
 		if terminalPkg, ok := SupportedTerminals[terminal]; ok {
-			addCmd("brew cask install "+terminalPkg, 0)
+			addCmd("sudo apt install -y "+terminalPkg, 0)
 		}
 	}
-	addCmd("", 0)
 }
