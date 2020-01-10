@@ -7,6 +7,8 @@ var SupportedBrowsers = map[string]string{
 }
 
 func installChrome(addCmd func(string, int)) {
+	addCmd("", 0)
+	addCmd("# Installation for google chrome.", 0)
 	addCmd("echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\"  > /etc/apt/sources.list.d/google-chrome.list", 0)
 	addCmd("pushd $(mktemp -d)", 0)
 	addCmd("wget https://dl.google.com/linux/linux_signing_key.pub", 0)
@@ -14,16 +16,20 @@ func installChrome(addCmd func(string, int)) {
 	addCmd("popd  # mktemp -d", 0)
 	addCmd("sudo apt update", 0)
 	addCmd("sudo apt install -y google-chrome-stable", 0)
+	addCmd("", 0)
 }
 
 func installTor(addCmd func(string, int)) {
+	addCmd("", 0)
+	addCmd("# Installation for Tor.", 0)
 	addCmd("sudo apt install apt-transport-https", 0)
 	addCmd("sudo add-apt-repository universe", 0)
 	addCmd("pushd $(mktemp -d)", 0)
 	addCmd("wget -q -0 https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | sudo apt-key add -", 0)
 	addCmd("echo \"deb https://deb.torproject.org/torproject.org $(lsb_release -cs) main\" | sudo tee -a /etc/apt/sources.list", 0)
 	addCmd("sudo apt update", 0)
-	addCmd("sudo apt install -y tor deb.torproject.org-keyring torbrowser-launcher", 0)
+	addCmd("sudo apt install -y tor deb.torproject.org-keyring torbrowser-launcher\n", 0)
+	addCmd("", 0)
 }
 
 // InstallBrowsers will add all requested browser setup items to the script
@@ -32,7 +38,7 @@ func InstallBrowsers(addCmd func(string, int), browsers []string) {
 		return
 	}
 
-	addCmd("# Install all browsers requested", 0)
+	addCmd("\n# Install all browsers requested", 0)
 	addCmd("echo \"Installing selected browsers on to the system\"", 0)
 
 	for _, browser := range browsers {
@@ -44,5 +50,4 @@ func InstallBrowsers(addCmd func(string, int), browsers []string) {
 			}
 		}
 	}
-	addCmd("", 0)
 }

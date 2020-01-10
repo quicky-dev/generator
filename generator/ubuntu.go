@@ -139,8 +139,7 @@ func (generator UBUNTU_GENERATOR) GenerateDynamicScript(install InstallRequest) 
 	script = append(script, "#!/bin/bash\n")
 
 	// Setup the setup script
-	ubuntu.InstallXCode(commander(&script))
-	ubuntu.InstallBrew(commander(&script))
+	ubuntu.InstallSetup(commander(&script))
 	ubuntu.InstallLangs(commander(&script), install.Languages)
 	ubuntu.InstallTerminals(commander(&script), install.Terminals)
 	ubuntu.InstallShells(commander(&script), install.Shells)
@@ -200,7 +199,7 @@ func GetUbuntuGenerator() UBUNTU_GENERATOR {
 		},
 		"Editors": {
 			Description: "Select the text editor of your choice",
-			Items:       []string{"vim", "macvim", "sublime-text"},
+			Items:       []string{"vim", "sublime-text"},
 		},
 		"Tools": {
 			Description: "Select the toolings of your choice",

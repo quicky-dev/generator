@@ -11,7 +11,7 @@ func InstallDatabases(addCmd func(string, int), databases []string) {
 		return
 	}
 
-	addCmd("# Install all databases requested", 0)
+	addCmd("\n# Install all databases requested", 0)
 	addCmd("echo \"Installing selected databases on to the system\"", 0)
 
 	for _, database := range databases {

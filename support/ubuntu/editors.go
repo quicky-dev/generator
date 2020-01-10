@@ -9,13 +9,18 @@ var SupportedEditors = map[string]string{
 }
 
 func installAtom(addCmd func(string, int)) {
+	addCmd("", 0)
+	addCmd("# Install atom", 0)
 	addCmd("pushd $(mktemp -d)", 0)
 	addCmd("wget -O atom-amd64.deb https://atom.io/download/deb", 0)
 	addCmd("sudo dpkg -i atom-amd64.deb", 0)
 	addCmd("popd  # mktemp -d", 0)
+	addCmd("", 0)
 }
 
 func installVisualStudio(addCmd func(string, int)) {
+	addCmd("", 0)
+	addCmd("# Install visual studio code", 0)
 	addCmd("pushd $(mktemp -d)", 0)
 	addCmd("sudo apt install -y software-properties-common apt-transport-https", 0)
 	addCmd("wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -", 0)
@@ -23,15 +28,19 @@ func installVisualStudio(addCmd func(string, int)) {
 	addCmd("popd  # mktemp -d", 0)
 	addCmd("sudo apt update", 0)
 	addCmd("sudo apt install -y code", 0)
+	addCmd("", 0)
 }
 
 func installSublimeText(addCmd func(string, int)) {
+	addCmd("", 0)
+	addCmd("# Install sublime text", 0)
 	addCmd("pushd $(mktemp -d)", 0)
 	addCmd("sudo apt install -y apt-transport-https ca-certificates curl software-properties-common", 0)
 	addCmd("curl -fsSL https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -", 0)
 	addCmd("sudo add-apt-repository \"deb https://download.sublimetext.com/ apt/stable/\"", 0)
 	addCmd("sudo apt update", 0)
 	addCmd("sudo apt install sublime-text", 0)
+	addCmd("", 0)
 }
 
 // InstallEditors will add all requested editor setup items to the script
